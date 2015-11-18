@@ -5,7 +5,7 @@
   xmlns:cx="http://xmlcalabash.com/ns/extensions"
   xmlns:s="http://purl.oclc.org/dsdl/schematron"
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-  xmlns:transpect="http://www.le-tex.de/namespace/transpect"
+  xmlns:tr="http://transpect.io"
   exclude-result-prefixes="xs"
   version="2.0">
   
@@ -14,7 +14,7 @@
   <xsl:param name="svrl-srcpath" select="'BC_orphans'"/>
   
   <xsl:template match="/cx:document">
-    <svrl:schematron-output transpect:rule-family="kindlegen" transpect:step-name="kindlegen">
+    <svrl:schematron-output tr:rule-family="kindlegen" tr:step-name="kindlegen">
       <xsl:apply-templates/>
     </svrl:schematron-output>
   </xsl:template>

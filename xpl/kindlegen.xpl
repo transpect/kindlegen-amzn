@@ -4,14 +4,13 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" 
   xmlns:cx="http://xmlcalabash.com/ns/extensions" 
   xmlns:pos="http://exproc.org/proposed/steps/os" 
-  xmlns:letex="http://www.le-tex.de/namespace"
-  xmlns:transpect="http://www.le-tex.de/namespace/transpect"
+  xmlns:tr="http://transpect.io"
   version="1.0"
   name="kindlegen"
-  type="transpect:kindlegen" exclude-inline-prefixes="p pos letex">
+  type="tr:kindlegen" exclude-inline-prefixes="p pos letex">
   
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-    <h1>transpect:kindlegen</h1>
+    <h1>tr:kindlegen</h1>
     <p>A XProc Wrapper for Amazon KindleGen.</p>
     <h2>Usage</h2>
     <p>Pass EPUB file and the location of your kindlegen binary as parameters to this pipeline.</p>
@@ -28,11 +27,11 @@
       &lt;c:file code="warnings" name="C:/home/my-sample.mobi"/>
       
       Errors:
-      &lt;c:error transpect:rule-family="kindlegen"
+      &lt;c:error tr:rule-family="kindlegen"
         name="C:/home/my-sample.epub">MOBI/KF8 generation failed!&lt;/c:error></pre>
     <h2>Requirements</h2>
     <ul>
-      <li><p>Path normalizing requires <a href="https://subversion.le-tex.de/common/xproc-util/file-uri/" target="_blank">transpect:file-uri</a>.</p></li>
+      <li><p>Path normalizing requires <a href="https://subversion.le-tex.de/common/xproc-util/file-uri/" target="_blank">tr:file-uri</a>.</p></li>
       <li><p>You have to download KindleGen from <a href="http://www.amazon.com/gp/feature.html?docId=1000765211" target="_blank">here</a> and store it to <i>some-directory</i>&#x2122;</p></li>
       <li><p>Paths are resolved with <a href="https://subversion.le-tex.de/common/letex-util/xslt-based-catalog-resolver/" target="_blank">XSLT-based catalog resolver</a>. You have to rewrite the URI <code>http://customers.le-tex.de/generic/book-conversion/infrastructure/kindlegen/i386/</code> with your local KindleGen install directory by using a XML catalog as it is shown in the example below:</p>
         <pre>
@@ -97,11 +96,11 @@
   <p:option name="status-dir-uri" select="'status'"/>
   
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="http://transpect.le-tex.de/xproc-util/file-uri/file-uri.xpl"/>
-  <p:import href="http://transpect.le-tex.de/book-conversion/converter/xpl/simple-progress-msg.xpl"/>
-  <p:import href="http://transpect.le-tex.de/xproc-util/store-debug/store-debug.xpl"/>
+  <p:import href="http://transpect.io/xproc-util/file-uri/xpl/file-uri.xpl"/>
+  <p:import href="http://transpect.io/simple-progress-msg/xpl/simple-progress-msg.xpl"/>
+  <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
   
-  <letex:simple-progress-msg name="start-msg" file="kindlegen-start.txt">
+  <tr:simple-progress-msg name="start-msg" file="kindlegen-start.txt">
     <p:input port="msgs">
       <p:inline>
         <c:messages>
@@ -111,7 +110,7 @@
       </p:inline>
     </p:input>
     <p:with-option name="status-dir-uri" select="$status-dir-uri"/>
-  </letex:simple-progress-msg>
+  </tr:simple-progress-msg>
   
   <p:sink/>
   
@@ -121,25 +120,25 @@
   <!--  *
         * KindleGen path can be either passed as option or if empty, resolved against a XML catalog.
         * -->
-  <transpect:file-uri name="kindlegen-path">
+  <tr:file-uri name="kindlegen-path">
     <p:with-option name="filename"
       select="if(string-length($kindlegen) gt 0) then $kindlegen
       else if (matches(/c:result/@os-name, 'windows', 'i')) 
-        then 'http://customers.le-tex.de/generic/book-conversion/infrastructure/kindlegen/i386/kindlegen.exe'
-        else 'http://customers.le-tex.de/generic/book-conversion/infrastructure/kindlegen/i386/kindlegen'"/>
+        then 'http://this.transpect.io/infrastructure/kindlegen/i386/kindlegen.exe'
+        else 'http://this.transpect.io/infrastructure/kindlegen/i386/kindlegen'"/>
     <p:input port="catalog">
       <p:document href="http://customers.le-tex.de/generic/book-conversion/xmlcatalog/catalog.xml"/>
     </p:input>
     <p:input port="resolver">
-      <p:document href="http://transpect.le-tex.de/xslt-util/xslt-based-catalog-resolver/resolve-uri-by-catalog.xsl"/>
+      <p:document href="http://transpect.io/xslt-util/xslt-based-catalog-resolver/xsl/resolve-uri-by-catalog.xsl"/>
     </p:input>
-  </transpect:file-uri>
+  </tr:file-uri>
   
   <p:sink/>
   
-  <transpect:file-uri name="epub-path">
+  <tr:file-uri name="epub-path">
     <p:with-option name="filename" select="$epub"/>
-  </transpect:file-uri>
+  </tr:file-uri>
   
   <!--  *
         * execute KindleGen
@@ -159,29 +158,29 @@
         * provide you with valuable debug information
         * -->
   
-  <letex:store-debug pipeline-step="kindlegen/exec-errout" extension="xml">
+  <tr:store-debug pipeline-step="kindlegen/exec-errout" extension="xml">
     <p:input port="source">
       <p:pipe port="errors" step="kindlegen-execute"/>
     </p:input>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
-  </letex:store-debug>
+  </tr:store-debug>
   
-  <letex:store-debug pipeline-step="kindlegen/exec-stdout" extension="xml">
+  <tr:store-debug pipeline-step="kindlegen/exec-stdout" extension="xml">
     <p:input port="source">
       <p:pipe port="result" step="kindlegen-execute"/>
     </p:input>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
-  </letex:store-debug>
+  </tr:store-debug>
   
-  <letex:store-debug pipeline-step="kindlegen/exit-status" extension="xml">
+  <tr:store-debug pipeline-step="kindlegen/exit-status" extension="xml">
     <p:input port="source">
       <p:pipe port="exit-status" step="kindlegen-execute"/>
     </p:input>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
-  </letex:store-debug>
+  </tr:store-debug>
   
   <p:sink/>
   
@@ -201,7 +200,6 @@
       <p:empty/>
     </p:input>
   </p:xslt>
-  
   
   <p:choose>
     
@@ -224,7 +222,7 @@
           <p:pipe port="result" step="epub-path"/>
         </p:with-option>
         <p:input port="source">
-          <p:inline><c:file transpect:rule-family="kindlegen"/></p:inline>
+          <p:inline><c:file tr:rule-family="kindlegen"/></p:inline>
         </p:input>
       </p:add-attribute>
       
@@ -248,7 +246,7 @@
           <p:pipe port="result" step="epub-path"/>
         </p:with-option>
         <p:input port="source">
-          <p:inline><c:errors transpect:rule-family="kindlegen"><c:error code="kindlegen-error" srcpath="BC_orphans">MOBI/KF8 generation failed!</c:error></c:errors></p:inline>
+          <p:inline><c:errors tr:rule-family="kindlegen"><c:error code="kindlegen-error" srcpath="BC_orphans">MOBI/KF8 generation failed!</c:error></c:errors></p:inline>
         </p:input>
       </p:add-attribute>
             
@@ -256,7 +254,7 @@
     
   </p:choose>
   
-  <letex:simple-progress-msg name="success-msg" file="kindlegen-success.txt">
+  <tr:simple-progress-msg name="success-msg" file="kindlegen-success.txt">
     <p:input port="msgs">
       <p:inline>
         <c:messages>
@@ -266,6 +264,6 @@
       </p:inline>
     </p:input>
     <p:with-option name="status-dir-uri" select="$status-dir-uri"/>
-  </letex:simple-progress-msg>
+  </tr:simple-progress-msg>
   
 </p:declare-step>

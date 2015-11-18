@@ -7,7 +7,7 @@
   xmlns:tr="http://transpect.io"
   version="1.0"
   name="kindlegen"
-  type="tr:kindlegen" exclude-inline-prefixes="p pos letex">
+  type="tr:kindlegen" exclude-inline-prefixes="p pos tr">
   
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
     <h1>tr:kindlegen</h1>
@@ -31,17 +31,17 @@
         name="C:/home/my-sample.epub">MOBI/KF8 generation failed!&lt;/c:error></pre>
     <h2>Requirements</h2>
     <ul>
-      <li><p>Path normalizing requires <a href="https://subversion.le-tex.de/common/xproc-util/file-uri/" target="_blank">tr:file-uri</a>.</p></li>
+      <li><p>Path normalizing requires <a href="https://github.com/transpect/xproc-util/tree/master/file-uri/" target="_blank">tr:file-uri</a>.</p></li>
       <li><p>You have to download KindleGen from <a href="http://www.amazon.com/gp/feature.html?docId=1000765211" target="_blank">here</a> and store it to <i>some-directory</i>&#x2122;</p></li>
-      <li><p>Paths are resolved with <a href="https://subversion.le-tex.de/common/letex-util/xslt-based-catalog-resolver/" target="_blank">XSLT-based catalog resolver</a>. You have to rewrite the URI <code>http://customers.le-tex.de/generic/book-conversion/infrastructure/kindlegen/i386/</code> with your local KindleGen install directory by using a XML catalog as it is shown in the example below:</p>
+      <li><p>Paths are resolved with <a href="https://github.com/transpect/xslt-util/tree/master/xslt-based-catalog-resolver/" target="_blank">XSLT-based catalog resolver</a>. You have to rewrite the URI <code>http://this.transpect.io/infrastructure/kindlegen/i386/</code> with your local KindleGen install directory by using a XML catalog as it is shown in the example below:</p>
         <pre>
 &lt;catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   &lt;nextCatalog catalog="../store-debug/xmlcatalog/catalog.xml"/>
   &lt;nextCatalog catalog="../file-uri/xmlcatalog/catalog.xml"/>
   &lt;nextCatalog catalog="../xslt-based-catalog-resolver/xmlcatalog/catalog.xml"/>
   
-  &lt;rewriteURI uriStartString="http://customers.le-tex.de/generic/book-conversion/xmlcatalog/catalog.xml" rewritePrefix="my-catalog.xml"/>
-  &lt;rewriteURI uriStartString="http://customers.le-tex.de/generic/book-conversion/infrastructure/kindlegen/i386/" rewritePrefix="../<i>some-directory</i>/"/>
+  &lt;rewriteURI uriStartString="http://this.transpect.io/xmlcatalog/catalog.xml" rewritePrefix="my-catalog.xml"/>
+  &lt;rewriteURI uriStartString="http://this.transpect.io/infrastructure/kindlegen/i386/" rewritePrefix="../<i>some-directory</i>/"/>
 &lt;/catalog>
         </pre>
       </li>
@@ -97,7 +97,7 @@
   
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="http://transpect.io/xproc-util/file-uri/xpl/file-uri.xpl"/>
-  <p:import href="http://transpect.io/simple-progress-msg/xpl/simple-progress-msg.xpl"/>
+  <p:import href="http://transpect.io/xproc-util/simple-progress-msg/xpl/simple-progress-msg.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
   
   <tr:simple-progress-msg name="start-msg" file="kindlegen-start.txt">
@@ -127,7 +127,7 @@
         then 'http://this.transpect.io/infrastructure/kindlegen/i386/kindlegen.exe'
         else 'http://this.transpect.io/infrastructure/kindlegen/i386/kindlegen'"/>
     <p:input port="catalog">
-      <p:document href="http://customers.le-tex.de/generic/book-conversion/xmlcatalog/catalog.xml"/>
+      <p:document href="http://this.transpect.io/xmlcatalog/catalog.xml"/>
     </p:input>
     <p:input port="resolver">
       <p:document href="http://transpect.io/xslt-util/xslt-based-catalog-resolver/xsl/resolve-uri-by-catalog.xsl"/>

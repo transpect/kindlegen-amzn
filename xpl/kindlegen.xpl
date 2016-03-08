@@ -10,15 +10,11 @@
   type="tr:kindlegen" exclude-inline-prefixes="p pos tr">
   
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-    A XProc Wrapper for Amazon KindleGen. Pass the EPUB file and the location of your kindlegen binary as parameters to this pipeline.
-
+    <p>A XProc Wrapper for Amazon KindleGen. Pass the EPUB file and the location of your kindlegen binary as parameters to this pipeline.</p>
     <pre>java -jar calabash.jar kindlegen.xpl kindlegen=/data/mypath/kindlegen epub=/data/mypath/myepub.epub</pre>
-    
-    Note: KindleGen path can be passed as option. If the option is not set, the path is resolved against a XML catalog.
-    
+    <p>Note: KindleGen path can be passed as option. If the option is not set, the path is resolved against a XML catalog.</p>
     <h5>Output</h5>
-    The MOBI file is stored to the directory of the EPUB file. The XML result shipped on the result port is either a <code>c:file</code> or a <code>c:errors</code>, depending on whether KindleGen was executed successfully.
-
+    <p>The MOBI file is stored to the directory of the EPUB file. The XML result shipped on the result port is either a <code>c:file</code> or a <code>c:errors</code>, depending on whether KindleGen was executed successfully.</p>
     <pre>
       Success:
       &lt;c:file code="OK" name="C:/home/my-sample.mobi"/>
